@@ -1,46 +1,61 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-var app = {
-    // Application Constructor
-    initialize: function() {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-    },
+rowId = 0;
 
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
-    onDeviceReady: function() {
-        this.receivedEvent('deviceready');
-    },
+document.querySelector("button#addTaskBtn").addEventListener("click", addTask);
 
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+document
+  .querySelector("button#removeTaskBtn")
+  .addEventListener("click", removeTask);
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
+function addTask() {
+  var task = prompt("Task", "");
+  if (task) {
+    addTableRow(
+      {
+        check: 0,
+        text: task
+      },
+      false
+    );
+  }
+}
 
-        console.log('Received Event: ' + id);
-    }
-};
+function removeTask() {}
 
-app.initialize();
+function checkTask() {}
+
+function saveTask() {}
+
+function deleteTask() {}
+
+function addTableRow(task, appIsLoading) {
+  rowId += 1;
+  var table = document.getElementById("taskTable");
+  var rowCount = table.rows.length;
+  var row = table.insertRow(rowCount);
+
+  var cell1 = row.insertCell(0);
+  var elm1 = document.createElement("input");
+  elm1.type = "checkbox";
+  elm1.name = "task[]";
+  elm1.addEventListener("click", checkTask);
+  cell1.appendChild(elm1);
+
+  var cell2 = row.insertCell(1);
+  var elm2 = document.createElement("input");
+  elm2.type = "text";
+  elm2.name = "taskText[]";
+  elm2.id = "text" + rowId;
+  elm2.value = task.text;
+  elm2.addEventListener("change", saveTask);
+  cell2.appendChild(elm2);
+
+  var cell3 = row.insertCell(2);
+  var elm3 = document.createElement("input");
+  elm3.type = "button";
+  elm3.id = rowId;
+  elm3.value = "Delete";
+  elm3.addEventListener("click", deleteTask);
+  cell3.appendChild(elm3);
+
+  alert("Task added!");
+}
