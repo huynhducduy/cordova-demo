@@ -290,7 +290,7 @@ document.addEventListener("deviceready", load, false);
 // Status bar
 
 window.addEventListener("statusTap", function() {
-  document.body.scrollTop = 0;
+  window.scrollTo(0, 0);
 });
 
 var overlays = true;

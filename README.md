@@ -2,6 +2,6 @@
 
 phonegap serve
 
-cordova run ios --target="iPhone-11" --debug
+cordova run ios --target="iPhone-11"
 
-cordova run android --debug
+cordova run android
