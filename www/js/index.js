@@ -1,3 +1,44 @@
+// Get indexedDB ------------------------------------------------------------
+window.indexedDB =
+  window.indexedDB ||
+  window.mozIndexedDB ||
+  window.webkitIndexedDB ||
+  window.msIndexedDB;
+
+window.IDBTransaction =
+  window.IDBTransaction ||
+  window.webkitIDBTransaction ||
+  window.msIDBTransaction;
+window.IDBKeyRange =
+  window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+
+var db;
+var request = window.indexedDB.open("todo", 1);
+
+request.onupgradeneeded = function(event) {
+  event.target.result.createObjectStore("tasks", { keyPath: "id" });
+};
+
+request.onerror = function(event) {
+  console.log("error opening db");
+};
+
+request.onsuccess = function(event) {
+  db = request.result;
+};
+
+// Generate id for IndexedDb
+function makeid() {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < 10; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 rowId = 0;
 
 document.querySelector("button#addTaskBtn").addEventListener("click", addTask);
@@ -84,45 +125,65 @@ function save() {
     }
   }
 
-  // Using LocalStorage
+  // Using LocalStorage --------------------------------------------------------
 
   // window.localStorage.setItem("tasks", JSON.stringify(tasks));
 
-  // Using WebSQL
-  var db = window.openDatabase(
-    "todo.app",
-    "1.0",
-    "Cordova Demo with simple ToDo App",
-    5 * 1024 * 1024
-  );
+  // Using WebSQL --------------------------------------------------------------
+  // var db = window.openDatabase(
+  //   "todo.app",
+  //   "1.0",
+  //   "Cordova Demo with simple ToDo App",
+  //   5 * 1024 * 1024
+  // );
 
-  db.transaction(function(t) {
-    t.executeSql(
-      "DELETE FROM todo",
-      [],
-      function() {},
-      function(_, e) {
-        console.log("There has been an error: " + e.message);
-      }
-    );
-  });
+  // db.transaction(function(t) {
+  //   t.executeSql(
+  //     "DELETE FROM todo",
+  //     [],
+  //     function() {},
+  //     function(_, e) {
+  //       console.log("There has been an error: " + e.message);
+  //     }
+  //   );
+  // });
 
-  db.transaction(function(t) {
-    for (var task of Object.values(tasks)) {
-      t.executeSql(
-        "INSERT INTO todo(`check`, text) VALUES (?,?)",
-        [task.check, task.text],
-        function() {},
-        function(_, e) {
-          console.log("There has been an error: " + e.message);
-        }
-      );
-    }
-  });
+  // db.transaction(function(t) {
+  //   for (var task of Object.values(tasks)) {
+  //     t.executeSql(
+  //       "INSERT INTO todo(`check`, text) VALUES (?,?)",
+  //       [task.check, task.text],
+  //       function() {},
+  //       function(_, e) {
+  //         console.log("There has been an error: " + e.message);
+  //       }
+  //     );
+  //   }
+  // });
+
+  // Using IndexedDB ----------------------------------------------------------------
+  db.transaction(["tasks"], "readwrite")
+    .objectStore("tasks")
+    .clear();
+
+  for (var task of Object.values(tasks)) {
+    var request = db
+      .transaction(["tasks"], "readwrite")
+      .objectStore("tasks")
+      .add({
+        id: makeid(),
+        check: task.check,
+        text: task.text
+      });
+
+    request.onerror = function(event) {
+      alert("Unable to add data\r\n");
+    };
+  }
 }
 
 function load() {
-  // Using localStorage
+  // Using localStorage --------------------------------------------------------------
   // var toLoad = JSON.parse(localStorage.getItem("tasks", null));
   // if (toLoad) {
   //   var count = 0;
@@ -133,39 +194,54 @@ function load() {
   //     addTableRow(toLoad["row" + i]);
   //   }
   // }
-  // Using WebSQL
-  var db = window.openDatabase(
-    "todo.app",
-    "1.0",
-    "Cordova Demo with simple ToDo App",
-    5 * 1024 * 1024
-  );
-  db.transaction(function(t) {
-    t.executeSql(
-      "CREATE TABLE IF NOT EXISTS todo(`check` INTEGER, text TEXT)",
-      [],
-      function() {},
-      function(tx, e) {
-        console.log("There has been an error: " + e.message);
-      }
-    );
-  });
-  db.transaction(function(t) {
-    t.executeSql(
-      "SELECT * FROM todo",
-      [],
-      function(_, results) {
-        console.log(results);
-        for (var i = 0; i < results.rows.length; i++) {
-          console.log(results.rows[i]);
-          addTableRow(results.rows[i]);
-        }
-      },
-      function(_, e) {
-        console.log("There has been an error: " + e.message);
-      }
-    );
-  });
+  // Using WebSQL --------------------------------------------------------------------
+  // var db = window.openDatabase(
+  //   "todo.app",
+  //   "1.0",
+  //   "Cordova Demo with simple ToDo App",
+  //   5 * 1024 * 1024
+  // );
+  // db.transaction(function(t) {
+  //   t.executeSql(
+  //     "CREATE TABLE IF NOT EXISTS todo(`check` INTEGER, text TEXT)",
+  //     [],
+  //     function() {},
+  //     function(tx, e) {
+  //       console.log("There has been an error: " + e.message);
+  //     }
+  //   );
+  // });
+  // db.transaction(function(t) {
+  //   t.executeSql(
+  //     "SELECT * FROM todo",
+  //     [],
+  //     function(_, results) {
+  //       console.log(results);
+  //       for (var i = 0; i < results.rows.length; i++) {
+  //         addTableRow(results.rows[i]);
+  //       }
+  //     },
+  //     function(_, e) {
+  //       console.log("There has been an error: " + e.message);
+  //     }
+  //   );
+  // });
+  // Using IndexedDB ----------------------------------------------------------------------
+
+  var transaction = db.transaction(["tasks"]);
+  var objectStore = transaction.objectStore("tasks");
+
+  objectStore.openCursor().onerror = function(event) {
+    alert("Unable to retrieve data from database!");
+  };
+
+  objectStore.openCursor().onsuccess = function(event) {
+    var cursor = event.target.result;
+    if (cursor) {
+      addTableRow({ check: cursor.value.check, text: cursor.value.text });
+      cursor.continue();
+    }
+  };
 }
 
 function addTableRow(task) {
