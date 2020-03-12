@@ -135,3 +135,15 @@ function addTableRow(task) {
 }
 
 document.addEventListener("deviceready", load, false);
+
+// Screen orientation API
+
+document.addEventListener("deviceready", function() {
+  screen.orientation.lock("landscape-primary");
+});
+
+// window.addEventListener("orientationchange", function() {
+screen.orientation.onchange = function() {
+  alert("Orientation changed: " + screen.orientation.type);
+};
+// });
