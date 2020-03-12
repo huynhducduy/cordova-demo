@@ -16,7 +16,10 @@ var db;
 var request = window.indexedDB.open("todo", 1);
 
 request.onupgradeneeded = function(event) {
-  event.target.result.createObjectStore("tasks", { keyPath: "id" });
+  event.target.result.createObjectStore("tasks", {
+    keyPath: "id",
+    autoIncrement: true
+  });
 };
 
 request.onerror = function(event) {
@@ -27,17 +30,7 @@ request.onsuccess = function(event) {
   db = request.result;
 };
 
-// Generate id for IndexedDb
-function makeid() {
-  var result = "";
-  var characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < 10; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
+// -----------------------------------------------------------------------------
 
 rowId = 0;
 
@@ -171,7 +164,6 @@ function save() {
       .transaction(["tasks"], "readwrite")
       .objectStore("tasks")
       .add({
-        id: makeid(),
         check: task.check,
         text: task.text
       });
@@ -284,12 +276,12 @@ document.addEventListener("deviceready", load, false);
 
 // Screen orientation API
 
-// document.addEventListener("deviceready", function() {
-//   screen.orientation.lock("landscape-primary");
-// });
+document.addEventListener("deviceready", function() {
+  screen.orientation.lock("landscape-primary"); // any
+});
 
-// // window.addEventListener("orientationchange", function() {
-// screen.orientation.onchange = function() {
-//   alert("Orientation changed: " + screen.orientation.type);
-// };
-// // });
+// window.addEventListener("orientationchange", function() {
+screen.orientation.onchange = function() {
+  alert("Orientation changed: " + screen.orientation.type);
+};
+// });
