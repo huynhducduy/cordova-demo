@@ -17,7 +17,7 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
 
-    <preference name="SplashScreenDelay" value="0"/> <!-- defaults to 3000ms, 0 to disable -->
+    <preference name="SplashScreenDelay" value="3000"/> <!-- defaults to 3000ms, 0 to disable -->
     <preference name="AutoHideSplashScreen" value="true" /> <!-- defaults to true -->
 
     <platform name="android">
@@ -37,8 +37,8 @@
         <splash src="res/screen/android/xxxport.png" density="port-xxxhdpi"/>
 
         <preference name="SplashMaintainAspectRatio" value="true" /> <!-- true = strerched to fit screen-->
-        <preference name="SplashShowOnlyFirstTime" value="true" /> <!-- defaults to true -->
-        <preference name="SplashScreenSpinnerColor" value="red" />
+        <preference name="SplashScreenSpinnerColor" value="blue" />
+        <preference name="SplashShowOnlyFirstTime" value="true" /> <!-- defaults to true, false for "back button close, navigator.app.exitApp()" -->
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
