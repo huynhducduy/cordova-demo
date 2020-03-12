@@ -275,7 +275,7 @@ function addTableRow(task) {
 
 document.addEventListener("deviceready", load, false);
 
-// Screen orientation API
+// Screen orientation
 
 // document.addEventListener("deviceready", function() {
 //   screen.orientation.lock("landscape-secondary"); // any
@@ -286,3 +286,43 @@ document.addEventListener("deviceready", load, false);
 //   alert("Orientation changed: " + screen.orientation.type);
 // };
 // });
+
+// Status bar
+
+// window.addEventListener("statusTap", function() {
+//   document.body.scrollTop = 0;
+// });
+
+var overlays = true;
+
+document.addEventListener("deviceready", function() {
+  document
+    .querySelector("button#togglesttb")
+    .addEventListener("click", function() {
+      if (StatusBar.isVisible) StatusBar.hide();
+      else StatusBar.show();
+    });
+  document
+    .querySelector("button#toggleOverlays")
+    .addEventListener("click", function() {
+      StatusBar.overlaysWebView((overlays = !overlays));
+    });
+  document
+    .querySelector("button#sttbColor")
+    .addEventListener("click", function() {
+      var color = prompt("Color name");
+      if (color) StatusBar.backgroundColorByName(color);
+    });
+  document
+    .querySelector("button#sttbDefault")
+    .addEventListener("click", StatusBar.styleDefault);
+  document
+    .querySelector("button#sttbLight")
+    .addEventListener("click", StatusBar.styleLightContent);
+  document
+    .querySelector("button#sttbBlackO")
+    .addEventListener("click", StatusBar.styleBlackOpaque);
+  document
+    .querySelector("button#sttbBlackT")
+    .addEventListener("click", StatusBar.styleBlackTranslucent);
+});
