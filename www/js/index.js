@@ -1,34 +1,34 @@
 // Get indexedDB ------------------------------------------------------------
-window.indexedDB =
-  window.indexedDB ||
-  window.mozIndexedDB ||
-  window.webkitIndexedDB ||
-  window.msIndexedDB;
+// window.indexedDB =
+//   window.indexedDB ||
+//   window.mozIndexedDB ||
+//   window.webkitIndexedDB ||
+//   window.msIndexedDB;
 
-window.IDBTransaction =
-  window.IDBTransaction ||
-  window.webkitIDBTransaction ||
-  window.msIDBTransaction;
-window.IDBKeyRange =
-  window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+// window.IDBTransaction =
+//   window.IDBTransaction ||
+//   window.webkitIDBTransaction ||
+//   window.msIDBTransaction;
+// window.IDBKeyRange =
+//   window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
 
-var db;
-var request = window.indexedDB.open("todo", 1);
+// var db;
+// var request = window.indexedDB.open("todo", 1);
 
-request.onupgradeneeded = function(event) {
-  event.target.result.createObjectStore("tasks", {
-    keyPath: "id",
-    autoIncrement: true
-  });
-};
+// request.onupgradeneeded = function(event) {
+//   event.target.result.createObjectStore("tasks", {
+//     keyPath: "id",
+//     autoIncrement: true
+//   });
+// };
 
-request.onerror = function(event) {
-  console.log("error opening db");
-};
+// request.onerror = function(event) {
+//   console.log("error opening db");
+// };
 
-request.onsuccess = function(event) {
-  db = request.result;
-};
+// request.onsuccess = function(event) {
+//   db = request.result;
+// };
 
 // -----------------------------------------------------------------------------
 
@@ -120,7 +120,7 @@ function save() {
 
   // Using LocalStorage --------------------------------------------------------
 
-  // window.localStorage.setItem("tasks", JSON.stringify(tasks));
+  window.localStorage.setItem("tasks", JSON.stringify(tasks));
 
   // Using WebSQL --------------------------------------------------------------
   // var db = window.openDatabase(
@@ -155,37 +155,37 @@ function save() {
   // });
 
   // Using IndexedDB ----------------------------------------------------------------
-  db.transaction(["tasks"], "readwrite")
-    .objectStore("tasks")
-    .clear();
+  // db.transaction(["tasks"], "readwrite")
+  //   .objectStore("tasks")
+  //   .clear();
 
-  for (var task of Object.values(tasks)) {
-    var request = db
-      .transaction(["tasks"], "readwrite")
-      .objectStore("tasks")
-      .add({
-        check: task.check,
-        text: task.text
-      });
+  // for (var task of Object.values(tasks)) {
+  //   var request = db
+  //     .transaction(["tasks"], "readwrite")
+  //     .objectStore("tasks")
+  //     .add({
+  //       check: task.check,
+  //       text: task.text
+  //     });
 
-    request.onerror = function(event) {
-      alert("Unable to add data\r\n");
-    };
-  }
+  //   request.onerror = function(event) {
+  //     alert("Unable to add data\r\n");
+  //   };
+  // }
 }
 
 function load() {
   // Using localStorage --------------------------------------------------------------
-  // var toLoad = JSON.parse(localStorage.getItem("tasks", null));
-  // if (toLoad) {
-  //   var count = 0;
-  //   for (var obj in toLoad) {
-  //     count++;
-  //   }
-  //   for (var i = 0; i < count; i++) {
-  //     addTableRow(toLoad["row" + i]);
-  //   }
-  // }
+  var toLoad = JSON.parse(localStorage.getItem("tasks", null));
+  if (toLoad) {
+    var count = 0;
+    for (var obj in toLoad) {
+      count++;
+    }
+    for (var i = 0; i < count; i++) {
+      addTableRow(toLoad["row" + i]);
+    }
+  }
   // Using WebSQL --------------------------------------------------------------------
   // var db = window.openDatabase(
   //   "todo.app",
@@ -220,20 +220,20 @@ function load() {
   // });
   // Using IndexedDB ----------------------------------------------------------------------
 
-  var transaction = db.transaction(["tasks"]);
-  var objectStore = transaction.objectStore("tasks");
+  // var transaction = db.transaction(["tasks"]);
+  // var objectStore = transaction.objectStore("tasks");
 
-  objectStore.openCursor().onerror = function(event) {
-    alert("Unable to retrieve data from database!");
-  };
+  // objectStore.openCursor().onerror = function(event) {
+  //   alert("Unable to retrieve data from database!");
+  // };
 
-  objectStore.openCursor().onsuccess = function(event) {
-    var cursor = event.target.result;
-    if (cursor) {
-      addTableRow({ check: cursor.value.check, text: cursor.value.text });
-      cursor.continue();
-    }
-  };
+  // objectStore.openCursor().onsuccess = function(event) {
+  //   var cursor = event.target.result;
+  //   if (cursor) {
+  //     addTableRow({ check: cursor.value.check, text: cursor.value.text });
+  //     cursor.continue();
+  //   }
+  // };
 }
 
 function addTableRow(task) {
@@ -289,46 +289,46 @@ document.addEventListener("deviceready", load, false);
 
 // Status bar
 
-window.addEventListener("statusTap", function() {
-  window.scrollTo(0, 0);
-});
+// window.addEventListener("statusTap", function() {
+//   window.scrollTo(0, 0);
+// });
 
-var overlays = true;
+// var overlays = true;
 
-document.addEventListener("deviceready", function() {
-  document
-    .querySelector("button#togglesttb")
-    .addEventListener("click", function() {
-      if (StatusBar.isVisible) StatusBar.hide();
-      else StatusBar.show();
-    });
-  document
-    .querySelector("button#toggleOverlays")
-    .addEventListener("click", function() {
-      StatusBar.overlaysWebView((overlays = !overlays));
-    });
-  document
-    .querySelector("button#sttbColor")
-    .addEventListener("click", function() {
-      var color = prompt("Color name");
-      if (color) StatusBar.backgroundColorByName(color);
-    });
-  document
-    .querySelector("button#sttbColorHex")
-    .addEventListener("click", function() {
-      var color = prompt("Hex string");
-      if (color) StatusBar.backgroundColorByHexString(color);
-    });
-  document
-    .querySelector("button#sttbDefault")
-    .addEventListener("click", StatusBar.styleDefault);
-  document
-    .querySelector("button#sttbLight")
-    .addEventListener("click", StatusBar.styleLightContent);
-  document
-    .querySelector("button#sttbBlackO")
-    .addEventListener("click", StatusBar.styleBlackOpaque);
-  document
-    .querySelector("button#sttbBlackT")
-    .addEventListener("click", StatusBar.styleBlackTranslucent);
-});
+// document.addEventListener("deviceready", function() {
+//   document
+//     .querySelector("button#togglesttb")
+//     .addEventListener("click", function() {
+//       if (StatusBar.isVisible) StatusBar.hide();
+//       else StatusBar.show();
+//     });
+//   document
+//     .querySelector("button#toggleOverlays")
+//     .addEventListener("click", function() {
+//       StatusBar.overlaysWebView((overlays = !overlays));
+//     });
+//   document
+//     .querySelector("button#sttbColor")
+//     .addEventListener("click", function() {
+//       var color = prompt("Color name");
+//       if (color) StatusBar.backgroundColorByName(color);
+//     });
+//   document
+//     .querySelector("button#sttbColorHex")
+//     .addEventListener("click", function() {
+//       var color = prompt("Hex string");
+//       if (color) StatusBar.backgroundColorByHexString(color);
+//     });
+//   document
+//     .querySelector("button#sttbDefault")
+//     .addEventListener("click", StatusBar.styleDefault);
+//   document
+//     .querySelector("button#sttbLight")
+//     .addEventListener("click", StatusBar.styleLightContent);
+//   document
+//     .querySelector("button#sttbBlackO")
+//     .addEventListener("click", StatusBar.styleBlackOpaque);
+//   document
+//     .querySelector("button#sttbBlackT")
+//     .addEventListener("click", StatusBar.styleBlackTranslucent);
+// });
