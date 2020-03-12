@@ -18,6 +18,7 @@
     "cordova-ios": "^5.1.1",
     "cordova-plugin-browsersync": "^1.1.0",
     "cordova-plugin-screen-orientation": "^3.0.2",
+    "cordova-plugin-splashscreen": "^5.0.3",
     "cordova-plugin-statusbar": "^2.4.3",
     "es6-promise-plugin": "^4.2.2"
   },
@@ -28,7 +29,8 @@
     "plugins": {
       "cordova-plugin-whitelist": {},
       "cordova-plugin-screen-orientation": {},
-      "cordova-plugin-statusbar": {}
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-splashscreen": {}
     },
     "platforms": [
       "browser",
