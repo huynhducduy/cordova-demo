@@ -258,6 +258,7 @@ function addTableRow(task) {
   elm2.value = task.text;
   if (task.check == 1)
     elm2.style.setProperty("text-decoration", "line-through");
+  elm2.style.setProperty("width", "100%");
   elm2.addEventListener("change", save);
   cell2.appendChild(elm2);
 
@@ -276,12 +277,12 @@ document.addEventListener("deviceready", load, false);
 
 // Screen orientation API
 
-document.addEventListener("deviceready", function() {
-  screen.orientation.lock("landscape-primary"); // any
-});
+// document.addEventListener("deviceready", function() {
+//   screen.orientation.lock("landscape-secondary"); // any
+// });
 
-// window.addEventListener("orientationchange", function() {
-screen.orientation.onchange = function() {
-  alert("Orientation changed: " + screen.orientation.type);
-};
+// // window.addEventListener("orientationchange", function() {
+// screen.orientation.onchange = function() {
+//   alert("Orientation changed: " + screen.orientation.type);
+// };
 // });
