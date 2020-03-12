@@ -289,9 +289,9 @@ document.addEventListener("deviceready", load, false);
 
 // Status bar
 
-// window.addEventListener("statusTap", function() {
-//   document.body.scrollTop = 0;
-// });
+window.addEventListener("statusTap", function() {
+  document.body.scrollTop = 0;
+});
 
 var overlays = true;
 
@@ -312,6 +312,12 @@ document.addEventListener("deviceready", function() {
     .addEventListener("click", function() {
       var color = prompt("Color name");
       if (color) StatusBar.backgroundColorByName(color);
+    });
+  document
+    .querySelector("button#sttbColorHex")
+    .addEventListener("click", function() {
+      var color = prompt("Hex string");
+      if (color) StatusBar.backgroundColorByHexString(color);
     });
   document
     .querySelector("button#sttbDefault")
